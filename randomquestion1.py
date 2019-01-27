@@ -4,30 +4,45 @@ class qtemplate:
     def __init__(self):
         self.qbuffer = []
         self.count = 0
+        print("Debug 0")
 
     def fillbuffer(self,choices=2,rstart=1,rend=10):
         for x in range(choices):
             self.qbuffer.append(rint(rstart,rend))
+            #print("Debug 1",self.qbuffer)
+
+    def shufflebuffer(self,choices=2,rstart=1,rend=10):
+        for x in range(choices):
+            while self.count != len(self.qbuffer):
+                 self.qbuffer[0+self.count] = rint(rstart,rend)
+                 self.count += 1
+                 #print("Debug 3",self.qbuffer)
+        self.count = 0
         
 class scquestion(qtemplate):
     def __init__(self):
         super().__init__()
-        self.errorcount = ()
+        self.errorcount = 0
         self.uanswer = ()
         self.fillbuffer()
+        #print("Debug 2")
 
     def singlechoicequestion(self):
-        try:
-            while self.errorcount != 3:
-                self.fillbuffer()
+        while self.errorcount != 3:
+            try:
                 self.uanswer = input("What is {} + {}? ".format(self.qbuffer[0],self.qbuffer[1]))
                 if int(self.uanswer) == self.qbuffer[0] + self.qbuffer[1]:
-                    print(self.uanswer,"is correct.")
+                    print("correct.")
                 else:
                     print("Incorrect. The correct answer was:",self.qbuffer[0] + self.qbuffer[1])
                     self.errorcount += 1
-        except KeyboardInterrupt as ki:
-            print("Thanks for playing!")
+                self.shufflebuffer()
+                #print("Debug 4")
+            except KeyboardInterrupt as ki:
+                print("\nThanks for playing!")
+                break
+            except ValueError as ve:
+                print("\n{} is not a valid answer.".format(self.uanswer))
 
 # Automatically runs the program on start.
 if __name__ == "__main__":
