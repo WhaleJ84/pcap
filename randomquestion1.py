@@ -3,16 +3,21 @@ from random import randint as rint # gave randint an alias to prevent me from ha
 class qtemplate:
     def __init__(self):
         self.count = 0
-        self.values = 2
+        self.values = 9
         #print("Debug 0")
 
     def fillbuffer(self,values,rstart=1,rend=10):
         self.qbuffer = tuple()
+        self.qbtlist = []
+        self.qbtotal = 0
         for x in range(values):
             tuple1 = (rint(rstart,rend),)
             self.qbuffer += tuple1
-            #self.qbuffer.append(rint(rstart,rend))
             #print("Debug 1",self.qbuffer)
+        for x in range(len(self.qbuffer)):
+            self.qbtlist.append(self.qbuffer[x])
+            self.qbtotal += self.qbuffer[x]
+        print("Debug 5",self.qbtlist,self.qbtotal)
 
 class scquestion(qtemplate):
     def __init__(self):
@@ -26,10 +31,10 @@ class scquestion(qtemplate):
         while self.errorcount != 3:
             try:
                 print("\nWhat is {} ".format(self.qbuffer[0]),end="")
-                for x in range(values - 1):
-                    print("+ {} ".format(self.qbuffer[(x + 1)]))
+                for x in range(self.values - 1):
+                    print("+ {} ".format(self.qbuffer[(x + 1)]),end="")
                 self.uanswer = input()
-                if int(self.uanswer) == self.qbuffer[0] + self.qbuffer[1]:
+                if int(self.uanswer) == self.qbtotal:
                     print("correct.")
                 else:
                     print("Incorrect. The correct answer was:",self.qbuffer[0] + self.qbuffer[1])
