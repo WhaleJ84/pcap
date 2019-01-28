@@ -2,49 +2,48 @@ from random import randint as rint # gave randint an alias to prevent me from ha
 
 class qtemplate:
     def __init__(self):
-        self.qbuffer = []
         self.count = 0
+        self.values = 2
         #print("Debug 0")
 
-    def fillbuffer(self,values=2,rstart=1,rend=10):
+    def fillbuffer(self,values,rstart=1,rend=10):
+        self.qbuffer = tuple()
         for x in range(values):
-            self.qbuffer.append(rint(rstart,rend))
+            tuple1 = (rint(rstart,rend),)
+            self.qbuffer += tuple1
+            #self.qbuffer.append(rint(rstart,rend))
             #print("Debug 1",self.qbuffer)
 
-    def shufflebuffer(self,values=2,rstart=1,rend=10):
-        for x in range(values):
-            while self.count != len(self.qbuffer):
-                 self.qbuffer[0+self.count] = rint(rstart,rend)
-                 self.count += 1
-                 #print("Debug 3",self.qbuffer)
-        self.count = 0
-        
 class scquestion(qtemplate):
     def __init__(self):
         super().__init__()
         self.errorcount = 0
         self.uanswer = ()
-        self.fillbuffer()
+        self.fillbuffer(self.values)
         #print("Debug 2")
 
-    def singlechoicequestion(self):
+    def singlechoicequestion(self,values):
         while self.errorcount != 3:
             try:
-                self.uanswer = input("\nWhat is {} + {}? ".format(self.qbuffer[0],self.qbuffer[1]))
+                print("\nWhat is {} ".format(self.qbuffer[0]),end="")
+                for x in range(values - 1):
+                    print("+ {} ".format(self.qbuffer[(x + 1)]))
+                self.uanswer = input()
                 if int(self.uanswer) == self.qbuffer[0] + self.qbuffer[1]:
                     print("correct.")
                 else:
                     print("Incorrect. The correct answer was:",self.qbuffer[0] + self.qbuffer[1])
                     self.errorcount += 1
-                self.shufflebuffer()
+                self.fillbuffer(self.values)
                 #print("Debug 4")
             except KeyboardInterrupt as ki:
                 break
             except ValueError as ve:
                 print("{} is not a valid answer.".format(self.uanswer))
+                self.errorcount += 1
         print("\nThanks for playing!")
 
 # Automatically runs the program on start.
 if __name__ == "__main__":
     quest = scquestion()
-    quest.singlechoicequestion()
+    quest.singlechoicequestion(2)
