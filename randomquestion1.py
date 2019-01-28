@@ -4,15 +4,15 @@ class qtemplate:
     def __init__(self):
         self.qbuffer = []
         self.count = 0
-        print("Debug 0")
+        #print("Debug 0")
 
-    def fillbuffer(self,choices=2,rstart=1,rend=10):
-        for x in range(choices):
+    def fillbuffer(self,values=2,rstart=1,rend=10):
+        for x in range(values):
             self.qbuffer.append(rint(rstart,rend))
             #print("Debug 1",self.qbuffer)
 
-    def shufflebuffer(self,choices=2,rstart=1,rend=10):
-        for x in range(choices):
+    def shufflebuffer(self,values=2,rstart=1,rend=10):
+        for x in range(values):
             while self.count != len(self.qbuffer):
                  self.qbuffer[0+self.count] = rint(rstart,rend)
                  self.count += 1
@@ -30,7 +30,7 @@ class scquestion(qtemplate):
     def singlechoicequestion(self):
         while self.errorcount != 3:
             try:
-                self.uanswer = input("What is {} + {}? ".format(self.qbuffer[0],self.qbuffer[1]))
+                self.uanswer = input("\nWhat is {} + {}? ".format(self.qbuffer[0],self.qbuffer[1]))
                 if int(self.uanswer) == self.qbuffer[0] + self.qbuffer[1]:
                     print("correct.")
                 else:
@@ -39,10 +39,10 @@ class scquestion(qtemplate):
                 self.shufflebuffer()
                 #print("Debug 4")
             except KeyboardInterrupt as ki:
-                print("\nThanks for playing!")
                 break
             except ValueError as ve:
-                print("\n{} is not a valid answer.".format(self.uanswer))
+                print("{} is not a valid answer.".format(self.uanswer))
+        print("\nThanks for playing!")
 
 # Automatically runs the program on start.
 if __name__ == "__main__":
