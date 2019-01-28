@@ -27,7 +27,7 @@ class scquestion(qtemplate):
         self.fillbuffer(self.values)
         #print("Debug 2")
 
-    def singlechoicequestion(self,values):
+    def singlechoicequestion(self):
         while self.errorcount != 3:
             try:
                 print("\nWhat is {} ".format(self.qbuffer[0]),end="")
@@ -51,4 +51,4 @@ class scquestion(qtemplate):
 # Automatically runs the program on start.
 if __name__ == "__main__":
     quest = scquestion()
-    quest.singlechoicequestion(2)
+    quest.singlechoicequestion()
