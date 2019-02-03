@@ -19,32 +19,32 @@ class qtemplate:
         self.qbuffer = tuple()
         self.qbtlist = []
         self.qbtotal = 0
-        for x in range(values):
+        for num in range(values):
             tuple1 = (rint(rstart,rend),)
             self.qbuffer += tuple1
             #print("Debug fillbuffer 1:",self.qbuffer)
-        for x in range(len(self.qbuffer)): # Can be optimised by finding way to convert existing tuple into a new list.
-            self.qbtlist.append(self.qbuffer[x])
-            if x == 0:
-                self.qbtotal = self.qbuffer[x]
+        for num in range(len(self.qbuffer)): # Can be optimised by finding way to convert existing tuple into a new list.
+            self.qbtlist.append(self.qbuffer[num])
+            if num == 0:
+                self.qbtotal = self.qbuffer[num]
                 #print("Debug fillbuffer 2a:",self.qbtotal) 
             else:
-                #print("Debug fillbuffer 2b:",x,self.op)
-                self.operation(x-1)
-                self.qbtotal = self.oper(self.qbtotal,self.qbuffer[x])
+                #print("Debug fillbuffer 2b:",num,self.op)
+                self.operation(num-1)
+                self.qbtotal = self.oper(self.qbtotal,self.qbuffer[num])
         #print("Debug fillbuffer 2c:",self.qbtlist,self.qbtotal)
 
-    def operation(self,opx=0): 
+    def operation(self,opnum=0): 
         self.op = tuple(self.randop)
-        if self.op[opx] == "+":
+        if self.op[opnum] == "+":
             self.oper = o.add
-        elif self.op[opx] == "-":
+        elif self.op[opnum] == "-":
             self.oper = o.sub
-        elif self.op[opx] == "*":
+        elif self.op[opnum] == "*":
             self.oper = o.mul
-        elif self.op[opx] == "/":
+        elif self.op[opnum] == "/":
             self.oper = o.truediv
-        elif self.op[opx] == "%":
+        elif self.op[opnum] == "%":
             self.oper = o.floordiv
         else: print("Debug operation else:",self.op)
         #print("Debug operation:",self.op)
@@ -62,8 +62,8 @@ class scquestion(qtemplate):
         while self.errorcount != 3:
             try:
                 print("\nWhat is {} ".format(self.qbuffer[0]),end="")
-                for x in range(self.values - 1):
-                    print("{} {} ".format(self.op[x],self.qbuffer[(x + 1)]),end="")
+                for num in range(self.values - 1):
+                    print("{} {} ".format(self.op[num],self.qbuffer[(num + 1)]),end="")
                 self.uanswer = input("\n")
                 if float(self.uanswer) == round(self.qbtotal,2):
                     print("correct.")
