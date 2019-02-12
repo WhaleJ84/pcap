@@ -3,8 +3,13 @@
 ##########################################################################################
 #                                                                                        #
 # Note that the mathematical equations calculated by this program are always left-sided, #
-# meaning that BIDMAS or whatever it is have no power here.                              #
+# meaning that BIDMAS or whatever it is has no power here.                               #
 #                                                                                        #
+# Future ideas for program:                                                              #
+# - latter operator influence based on former (i.e. if positive first, negative second)  #
+# - save scores to an external .txt file and read best streaks                           #
+# - timed questions                                                                      #
+#                                                                                        # 
 ##########################################################################################
 
 from random import randint as rint 
@@ -36,8 +41,10 @@ class qtemplate:
         for num in range(values):
             tuple1 = (rint(rstart,rend),)
             self.qbuffer += tuple1
-        for num in range(len(self.qbuffer)): # Can be optimised by finding way to convert existing tuple into a new list.
+        for num in range(len(self.qbuffer)):
             self.qbtlist.append(self.qbuffer[num])
+        #self.qbtlist = list(self.qbuffer) # Can replace last 4 lines with this if code is redone
+        #for num in range(len(self.qbtlist)):
             if num == 0: 
                 self.qbtotal = self.qbuffer[num]
             else:
@@ -46,7 +53,7 @@ class qtemplate:
                 self.qbtotal = self.oper(self.qbtotal,self.qbuffer[num])
         if self.temp == "0": print("Debug cheat:",self.qbtotal)
 
-    def operation(self,opnum=0): 
+    def operation(self,opnum=0):
         if len(self.ophist) <= (self.values-2):
             self.op = tuple(self.operchoice)
             if self.op[opnum] == "+":
@@ -59,6 +66,7 @@ class qtemplate:
                 self.oper = o.truediv
             elif self.op[opnum] == "%":
                 self.oper = o.floordiv
+            else: print("{} is invalid.".format(self.op[opnum]))
             self.ophist += tuple(self.op[opnum],)
 
 class scquestion(qtemplate):
@@ -78,7 +86,6 @@ class scquestion(qtemplate):
                 for num in range(self.values - 1):
                     #print("DEBUG:",self.values)
                     print("{} {} ".format(self.ophist[num],self.qbuffer[(num+1)]),end="")
-                print("DEBUG:",self.ophist)
                 self.uanswer = input("\n")
                 if float(self.uanswer) == round(self.qbtotal,1):
                     print("Correct.")
