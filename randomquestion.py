@@ -7,14 +7,23 @@ class qtemplate:
     def __init__(self):
         self.values = 3 # stops working correctly when higher than 9
         self.randop = ("+","-","*","/","%")
-        #self.specop = tuple(input("""Please enter {} operators without spaces, else ENTER for defaults.
-#+ addition
-#- subtraction
-#* multiplication
-#/ whole division
-#% integer division\n""".format(self.values-1)).replace(" ", ""))
         self.ophist = tuple()
         #print("Debug qtemplate")
+
+    def opchoice(self):
+        temp = input("Would you like the operators to be randomly generated every iteration? (Y/n)")
+        if temp == "n" or temp == "N" or temp == "no" or temp == "No":
+            self.specop = tuple(input("""Please enter {} operators without spaces, else ENTER for defaults.
++ addition
+- subtraction
+* multiplication
+/ whole division
+% integer division\n""".format(self.values-1)).replace(" ",""))
+            self.operchoice = self.specop
+        elif temp == "y" or temp == "Y" or temp == "yes" or temp == "Yes" or temp == "" or temp == " ":
+            self.operchoice = self.randop
+        else:
+            print("DEBUG")
 
     def fillbuffer(self,values,rstart=1,rend=10):
         self.qbuffer = tuple()
@@ -38,7 +47,7 @@ class qtemplate:
         print("Debug CHEAT:",self.qbtotal)
 
     def operation(self,opnum=0): 
-        self.op = tuple(self.randop)
+        self.op = tuple(self.operchoice)
         if self.op[opnum] == "+":
             self.oper = o.add
         elif self.op[opnum] == "-":
@@ -56,8 +65,10 @@ class qtemplate:
 class scquestion(qtemplate):
     def __init__(self):
         super().__init__()
+        self.successcount = 0
         self.errorcount = 0
         self.uanswer = ()
+        self.opchoice()
         self.operation()
         self.fillbuffer(self.values)
         #print("Debug scquestion")
@@ -71,18 +82,18 @@ class scquestion(qtemplate):
                 self.uanswer = input("\n")
                 if float(self.uanswer) == round(self.qbtotal,1):
                     print("Correct.")
+                    self.successcount +=1
                 else:
-                    print("Incorrect. The correct answer was:",self.qbtotal)
+                    print("Incorrect. The correct answer was:",round(self.qbtotal,1))
                     self.errorcount += 1
                 self.ophist = tuple()
                 self.fillbuffer(self.values)
-                #print("Debug singlechoicequestion")
             except KeyboardInterrupt as ki:
                 break
             except ValueError as ve:
                 print("{} is not a valid answer.".format(self.uanswer))
                 self.errorcount += 1
-        print("\nThanks for playing!")
+        print("\nYour score was: {}\nThanks for playing!".format(self.successcount))
 
 # Automatically runs the program on start.
 if __name__ == "__main__":
