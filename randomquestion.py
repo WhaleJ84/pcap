@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 
+##########################################################################################
+#                                                                                        #
+# Note that the mathematical equations calculated by this program are always left-sided, #
+# meaning that BIDMAS or whatever it is have no power here.                              #
+#                                                                                        #
+##########################################################################################
+
 from random import randint as rint 
 import operator as o
 
 class qtemplate:
     def __init__(self):
         self.values = 3 # stops working correctly when higher than 9
-        self.randop = ("+","-","*","/","%")
+        self.randop = ("+","-","*","%") # removed "/"
         self.ophist = tuple()
-        #print("Debug qtemplate")
 
     def opchoice(self):
-        temp = input("Would you like the operators to be randomly generated every iteration? (Y/n)")
-        if temp == "n" or temp == "N" or temp == "no" or temp == "No":
+        self.temp = str(input("Would you like the operators to be randomly generated every iteration? (Y/n)"))
+        if self.temp == "n" or self.temp == "N" or self.temp == "no" or self.temp == "No":
             self.specop = tuple(input("""Please enter {} operators without spaces, else ENTER for defaults.
 + addition
 - subtraction
@@ -20,10 +26,8 @@ class qtemplate:
 / whole division
 % integer division\n""".format(self.values-1)).replace(" ",""))
             self.operchoice = self.specop
-        elif temp == "y" or temp == "Y" or temp == "yes" or temp == "Yes" or temp == "" or temp == " ":
+        elif self.temp == "y" or self.temp == "Y" or self.temp == "yes" or self.temp == "Yes" or self.temp == "" or self.temp == " " or self.temp == "0":
             self.operchoice = self.randop
-        else:
-            print("DEBUG")
 
     def fillbuffer(self,values,rstart=1,rend=10):
         self.qbuffer = tuple()
@@ -32,35 +36,30 @@ class qtemplate:
         for num in range(values):
             tuple1 = (rint(rstart,rend),)
             self.qbuffer += tuple1
-            #print("Debug fillbuffer 1:",self.qbuffer)
         for num in range(len(self.qbuffer)): # Can be optimised by finding way to convert existing tuple into a new list.
             self.qbtlist.append(self.qbuffer[num])
-            if num == 0: # first loop, creates list
+            if num == 0: 
                 self.qbtotal = self.qbuffer[num]
-                #print("Debug fillbuffer 2a:",self.qbtotal) 
             else:
-                #print("Debug fillbuffer 2b:",num,self.op)
-                self.opnum = rint(0, (len(self.randop)-1))
+                self.opnum = rint(0, (len(self.operchoice)-1))
                 self.operation(self.opnum)
                 self.qbtotal = self.oper(self.qbtotal,self.qbuffer[num])
-        #print("Debug fillbuffer 2c:",self.qbtlist,self.qbtotal)
-        print("Debug CHEAT:",self.qbtotal)
+        if self.temp == "0": print("Debug cheat:",self.qbtotal)
 
     def operation(self,opnum=0): 
-        self.op = tuple(self.operchoice)
-        if self.op[opnum] == "+":
-            self.oper = o.add
-        elif self.op[opnum] == "-":
-            self.oper = o.sub
-        elif self.op[opnum] == "*":
-            self.oper = o.mul
-        elif self.op[opnum] == "/":
-            self.oper = o.truediv
-        elif self.op[opnum] == "%":
-            self.oper = o.floordiv
-        else: print("Debug operation else:",self.op)
-        self.ophist += tuple(self.op[opnum],)
-        #print("Debug operation:",self.op)
+        if len(self.ophist) <= (self.values-2):
+            self.op = tuple(self.operchoice)
+            if self.op[opnum] == "+":
+                self.oper = o.add
+            elif self.op[opnum] == "-":
+                self.oper = o.sub
+            elif self.op[opnum] == "*":
+                self.oper = o.mul
+            elif self.op[opnum] == "/":
+                self.oper = o.truediv
+            elif self.op[opnum] == "%":
+                self.oper = o.floordiv
+            self.ophist += tuple(self.op[opnum],)
 
 class scquestion(qtemplate):
     def __init__(self):
@@ -71,14 +70,15 @@ class scquestion(qtemplate):
         self.opchoice()
         self.operation()
         self.fillbuffer(self.values)
-        #print("Debug scquestion")
 
     def singlechoicequestion(self):
         while self.errorcount != 3:
             try:
                 print("\nWhat is {} ".format(self.qbuffer[0]),end="")
                 for num in range(self.values - 1):
-                    print("{} {} ".format(self.ophist[num],self.qbuffer[(num + 1)]),end="")
+                    #print("DEBUG:",self.values)
+                    print("{} {} ".format(self.ophist[num],self.qbuffer[(num+1)]),end="")
+                print("DEBUG:",self.ophist)
                 self.uanswer = input("\n")
                 if float(self.uanswer) == round(self.qbtotal,1):
                     print("Correct.")
@@ -95,7 +95,6 @@ class scquestion(qtemplate):
                 self.errorcount += 1
         print("\nYour score was: {}\nThanks for playing!".format(self.successcount))
 
-# Automatically runs the program on start.
 if __name__ == "__main__":
     quest = scquestion()
     quest.singlechoicequestion()
