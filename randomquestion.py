@@ -6,6 +6,7 @@
 # meaning that BIDMAS or whatever it is has no power here.                               #
 #                                                                                        #
 # Future ideas for program:                                                              #
+# - easy option for user to specify self.values number                                   #
 # - latter operator influence based on former (i.e. if positive first, negative second)  #
 # - save scores to an external .txt file and read best streaks                           #
 # - timed questions                                                                      #
@@ -47,10 +48,12 @@ class qtemplate:
         #for num in range(len(self.qbtlist)):
             if num == 0: 
                 self.qbtotal = self.qbuffer[num]
+                print("DEBUG", self.qbtotal)
             else:
                 self.opnum = rint(0, (len(self.operchoice)-1))
                 self.operation(self.opnum)
                 self.qbtotal = self.oper(self.qbtotal,self.qbuffer[num])
+                print("DEBUG",self.qbtotal)
         if self.temp == "0": print("Debug cheat:",self.qbtotal)
 
     def operation(self,opnum=0):
@@ -84,7 +87,7 @@ class scquestion(qtemplate):
             try:
                 print("\nWhat is {} ".format(self.qbuffer[0]),end="")
                 for num in range(self.values - 1):
-                    #print("DEBUG:",self.values)
+                    print("DEBUG:",self.values)
                     print("{} {} ".format(self.ophist[num],self.qbuffer[(num+1)]),end="")
                 self.uanswer = input("\n")
                 if float(self.uanswer) == round(self.qbtotal,1):
